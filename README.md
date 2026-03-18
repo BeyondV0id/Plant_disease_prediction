@@ -18,8 +18,9 @@ This project predicts plant health status (Healthy, Moderate Stress, High Stress
 4. 04_random_forest.ipynb
 5. 05_svm.ipynb
 6. 06_hybrid_model.ipynb
-7. 08_prediction.ipynb
-8. 09_risk_score_and_explainability.ipynb
+7. 07_model_comparison.ipynb
+8. 08_prediction.ipynb
+9. 09_risk_score_and_explainability.ipynb
 
 ## Novelty Extension
 
@@ -40,5 +41,5 @@ pip install -r requirements.txt
 
 ## Dataset
 
-Place your original CSV as `data/raw_dataset.csv` before running the notebooks.
+Place your original CSV as `data/plant_health_data.csv` before running the notebooks.
 # plant_disease_detection
