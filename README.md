@@ -17,8 +17,18 @@ This project predicts plant health status (Healthy, Moderate Stress, High Stress
 3. 03_eda.ipynb
 4. 04_random_forest.ipynb
 5. 05_svm.ipynb
-6. 06_model_comparison.ipynb
-7. 07_prediction.ipynb
+6. 06_hybrid_model.ipynb
+7. 08_prediction.ipynb
+8. 09_risk_score_and_explainability.ipynb
+
+## Novelty Extension
+
+The project now includes an advanced notebook for:
+
+- Continuous disease risk scoring (0-100)
+- Alert generation for decision support
+- SHAP-based sensor contribution analysis
+- Timestamp-based temporal health trend tracking
 
 ## Setup
 
