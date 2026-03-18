@@ -8,6 +8,7 @@ This project predicts plant health status (Healthy, Moderate Stress, High Stress
 - **notebooks/**: Step-by-step Jupyter notebooks
 - **models/**: Saved ML models and scaler
 - **outputs/**: Results and plots
+- 
 
 ## Run Order
 
