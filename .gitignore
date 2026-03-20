@@ -1,0 +1,37 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local env / secrets
+.env
+.env.*
+
+# Streamlit local config
+.streamlit/
+
+# Local logs and temporary outputs
+outputs/monitoring/
+*.log
+
+# Build / test artifacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
