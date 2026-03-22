@@ -59,7 +59,7 @@ Predictions are logged to:
 outputs/monitoring/prediction_log.csv
 ```
 
-## Notebook Run Order
+## Notebook Run Order:-
 
 1. `01_data_loading.ipynb`
 2. `02_preprocessing.ipynb`
@@ -79,7 +79,7 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-## Dataset
+## Dataset:-
 
 Expected raw dataset file:
 
@@ -101,7 +101,7 @@ Main features used by the advisory system:
 - Chlorophyll_Content
 - Electrochemical_Signal
 
-## Resume Framing
+## Resume Framing:-
 
 You can describe this project as:
 
