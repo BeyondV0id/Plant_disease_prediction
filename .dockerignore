@@ -1,0 +1,30 @@
+# Git metadata
+.git/
+.gitignore
+
+# Python cache / local env
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+ENV/
+.env
+.env.*
+.streamlit/
+
+# Local and generated outputs
+outputs/
+*.log
+
+# Development-only content not needed in the Space image
+docs/
+notebooks/
+theory/
+files.zip
+
+# OS / editor files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

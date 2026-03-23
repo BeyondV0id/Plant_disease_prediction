@@ -1,0 +1,192 @@
+
+<style>
+  .wrap { padding: 1rem 0; font-size: 13px; color: var(--color-text-primary); }
+  .step-nav { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .step-btn { padding: 5px 14px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; cursor: pointer; font-size: 12px; color: var(--color-text-secondary); }
+  .step-btn.active { background: var(--color-background-secondary); color: var(--color-text-primary); font-weight: 500; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  .eq { font-family: var(--font-mono); font-size: 13px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; margin: 10px 0; }
+  .num-pos { color: #0F6E56; font-weight: 500; }
+  .num-neg { color: #993C1D; font-weight: 500; }
+  .num-base { color: #534AB7; font-weight: 500; }
+  .num-pred { color: #185FA5; font-weight: 500; }
+  .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+  .tag-pos { background: #E1F5EE; color: #085041; }
+  .tag-neg { background: #FAECE7; color: #712B13; }
+  .tag-zero { background: #F1EFE8; color: #5F5E5A; }
+  .feat-row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+  .feat-name { min-width: 100px; font-size: 13px; color: var(--color-text-secondary); }
+  .shap-bar-wrap { flex: 1; position: relative; height: 28px; background: var(--color-background-secondary); border-radius: 4px; overflow: hidden; }
+  .shap-bar { height: 100%; display: flex; align-items: center; padding: 0 8px; font-size: 12px; font-weight: 500; border-radius: 4px; }
+  .shap-val { min-width: 50px; font-size: 12px; color: var(--color-text-secondary); }
+  .arrow-row { display: flex; align-items: center; gap: 0; margin: 4px 0; font-size: 12px; }
+  .arrow-seg { padding: 6px 10px; border-radius: 0; font-weight: 500; }
+  .arrow-seg:first-child { border-radius: var(--border-radius-md) 0 0 var(--border-radius-md); }
+  .arrow-seg:last-child { border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; }
+  .arrow-plus { padding: 0 6px; color: var(--color-text-secondary); font-size: 14px; }
+  .check-row { display: flex; align-items: flex-start; gap: 10px; margin: 6px 0; font-size: 13px; }
+  .check-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+  .check-ok { background: #E1F5EE; color: #085041; }
+  .check-x { background: #FAECE7; color: #712B13; }
+  .prop-title { font-size: 13px; font-weight: 500; margin: 0 0 4px; }
+  .prop-body { font-size: 12px; color: var(--color-text-secondary); line-height: 1.6; }
+  .dots { display: flex; gap: 6px; margin-bottom: 1.5rem; }
+  .dot-ind { width: 7px; height: 7px; border-radius: 50%; background: var(--color-border-secondary); }
+  .dot-ind.active { background: var(--color-text-primary); }
+</style>
+
+<div class="wrap">
+
+<div class="step-nav" id="nav"></div>
+<div class="dots" id="dots"></div>
+
+<div class="panel active" id="panel-0">
+  <div class="card">
+    <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px;">Baseline — the average model prediction across all data</div>
+    <div class="arrow-row">
+      <div class="arrow-seg" style="background:#EEEDFE;color:#3C3489;">Baseline = 38%</div>
+    </div>
+    <div style="font-size:12px;color:var(--color-text-secondary);margin-top:10px;">If you know nothing about a passenger, the model guesses 38% survival chance (the dataset average). SHAP values measure how each feature <i>moves</i> this number.</div>
+  </div>
+  <div class="card">
+    <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:8px;">The key formula</div>
+    <div class="eq">prediction = baseline + Σ SHAP<sub>i</sub></div>
+    <div style="font-size:12px;color:var(--color-text-secondary);">Every prediction is just the baseline shifted by the sum of all SHAP values. They must add up exactly — no rounding, no approximation.</div>
+  </div>
+</div>
+
+<div class="panel" id="panel-1">
+  <div class="card">
+    <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px;">Passenger: Rose — 1st class, female, age 17</div>
+    <div class="feat-row">
+      <div class="feat-name">Sex = female</div>
+      <div class="shap-bar-wrap"><div class="shap-bar" style="width:85%;background:#9FE1CB;color:#085041;">+0.28</div></div>
+      <span class="tag tag-pos">pushes up</span>
+    </div>
+    <div class="feat-row">
+      <div class="feat-name">Pclass = 1</div>
+      <div class="shap-bar-wrap"><div class="shap-bar" style="width:45%;background:#9FE1CB;color:#085041;">+0.14</div></div>
+      <span class="tag tag-pos">pushes up</span>
+    </div>
+    <div class="feat-row">
+      <div class="feat-name">Age = 17</div>
+      <div class="shap-bar-wrap"><div class="shap-bar" style="width:16%;background:#9FE1CB;color:#085041;">+0.05</div></div>
+      <span class="tag tag-pos">pushes up</span>
+    </div>
+    <div class="feat-row">
+      <div class="feat-name">Fare = 512</div>
+      <div class="shap-bar-wrap"><div class="shap-bar" style="width:12%;background:#9FE1CB;color:#085041;">+0.04</div></div>
+      <span class="tag tag-pos">pushes up</span>
+    </div>
+    <div style="border-top:0.5px solid var(--color-border-tertiary);margin-top:12px;padding-top:10px;">
+      <div class="arrow-row" style="flex-wrap:wrap;gap:4px;">
+        <div class="arrow-seg" style="background:#EEEDFE;color:#3C3489;">38%</div>
+        <div class="arrow-plus">+</div>
+        <div class="arrow-seg" style="background:#9FE1CB;color:#085041;">+0.28</div>
+        <div class="arrow-plus">+</div>
+        <div class="arrow-seg" style="background:#9FE1CB;color:#085041;">+0.14</div>
+        <div class="arrow-plus">+</div>
+        <div class="arrow-seg" style="background:#9FE1CB;color:#085041;">+0.05</div>
+        <div class="arrow-plus">+</div>
+        <div class="arrow-seg" style="background:#9FE1CB;color:#085041;">+0.04</div>
+        <div class="arrow-plus">=</div>
+        <div class="arrow-seg" style="background:#B5D4F4;color:#0C447C;font-size:14px;">87% survival</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="panel-2">
+  <div class="card">
+    <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px;">Passenger: Jack — 3rd class, male, age 20</div>
+    <div class="feat-row">
+      <div class="feat-name">Sex = male</div>
+      <div class="shap-bar-wrap">
+        <div style="position:absolute;right:0;height:100%;width:68%;background:#F5C4B3;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:12px;font-weight:500;color:#712B13;">-0.22</div>
+      </div>
+      <span class="tag tag-neg">pushes down</span>
+    </div>
+    <div class="feat-row">
+      <div class="feat-name">Pclass = 3</div>
+      <div class="shap-bar-wrap">
+        <div style="position:absolute;right:0;height:100%;width:56%;background:#F5C4B3;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:12px;font-weight:500;color:#712B13;">-0.18</div>
+      </div>
+      <span class="tag tag-neg">pushes down</span>
+    </div>
+    <div class="feat-row">
+      <div class="feat-name">Age = 20</div>
+      <div class="shap-bar-wrap"><div class="shap-bar" style="width:28%;background:#9FE1CB;color:#085041;">+0.09</div></div>
+      <span class="tag tag-pos">pushes up</span>
+    </div>
+    <div class="feat-row">
+      <div class="feat-name">Fare = 7.9</div>
+      <div class="shap-bar-wrap">
+        <div style="position:absolute;right:0;height:100%;width:16%;background:#F5C4B3;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:12px;font-weight:500;color:#712B13;">-0.05</div>
+      </div>
+      <span class="tag tag-neg">pushes down</span>
+    </div>
+    <div style="border-top:0.5px solid var(--color-border-tertiary);margin-top:12px;padding-top:10px;">
+      <div class="arrow-row" style="flex-wrap:wrap;gap:4px;">
+        <div class="arrow-seg" style="background:#EEEDFE;color:#3C3489;">38%</div>
+        <div class="arrow-plus">+</div>
+        <div class="arrow-seg" style="background:#F5C4B3;color:#712B13;">-0.22</div>
+        <div class="arrow-plus">+</div>
+        <div class="arrow-seg" style="background:#F5C4B3;color:#712B13;">-0.18</div>
+        <div class="arrow-plus">+</div>
+        <div class="arrow-seg" style="background:#9FE1CB;color:#085041;">+0.09</div>
+        <div class="arrow-plus">+</div>
+        <div class="arrow-seg" style="background:#F5C4B3;color:#712B13;">-0.05</div>
+        <div class="arrow-plus">=</div>
+        <div class="arrow-seg" style="background:#F5C4B3;color:#712B13;font-size:14px;">12% survival</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="panel-3">
+  <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px;">SHAP values have 3 mathematical guarantees:</div>
+  <div class="card">
+    <div class="prop-title">1. Local accuracy</div>
+    <div class="prop-body">SHAP values always sum exactly to (prediction − baseline). No leftover, no approximation.</div>
+    <div class="eq">87% − 38% = 0.28 + 0.14 + 0.05 + 0.04 = <span class="num-pos">0.49</span> ✓</div>
+  </div>
+  <div class="card">
+    <div class="prop-title">2. Consistency</div>
+    <div class="prop-body">If a feature contributes more in model B than model A (for every possible coalition), it always gets a higher SHAP value in B. The ranking is fair.</div>
+  </div>
+  <div class="card">
+    <div class="prop-title">3. Missingness</div>
+    <div class="prop-body">A feature that has zero effect on any prediction always gets a SHAP value of exactly 0.</div>
+    <div class="eq">useless_feature SHAP = <span class="num-zero" style="color:var(--color-text-secondary);font-weight:500;">0.00</span></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const steps = ['Baseline & formula', 'Positive example (Rose)', 'Negative example (Jack)', 'Key properties'];
+const nav = document.getElementById('nav');
+const dotsEl = document.getElementById('dots');
+let current = 0;
+
+steps.forEach((s, i) => {
+  const b = document.createElement('button');
+  b.className = 'step-btn' + (i===0?' active':'');
+  b.textContent = s;
+  b.onclick = () => goTo(i);
+  nav.appendChild(b);
+
+  const d = document.createElement('div');
+  d.className = 'dot-ind' + (i===0?' active':'');
+  dotsEl.appendChild(d);
+});
+
+function goTo(i) {
+  document.querySelectorAll('.panel').forEach((p,j) => p.classList.toggle('active', j===i));
+  document.querySelectorAll('.step-btn').forEach((b,j) => b.classList.toggle('active', j===i));
+  document.querySelectorAll('.dot-ind').forEach((d,j) => d.classList.toggle('active', j===i));
+  current = i;
+}
+</script>
